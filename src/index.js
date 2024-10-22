@@ -1,93 +1,77 @@
 //index.js
+//const baseURL = 'http://localhost:3000/characters'
 
-const data = [
-  {
-      "id": 1,
-      "name": "Mr. Cute",
-      "image": "https://thumbs.gfycat.com/EquatorialIckyCat-max-1mb.gif",
-      "votes": 0
-  },
-  {
-      "id": 2,
-      "name": "Mx. Monkey",
-      "image": "https://thumbs.gfycat.com/FatalInnocentAmericanshorthair-max-1mb.gif",
-      "votes": 0
-  },
-  {
-      "id": 3,
-      "name": "Ms. Zebra",
-      "image": "https://media2.giphy.com/media/20G9uNqE3K4dRjCppA/source.gif",
-      "votes": 0
-  },
-  {
-      "id": 4,
-      "name": "Dr. Lion",
-      "image": "http://bestanimations.com/Animals/Mammals/Cats/Lions/animated-lion-gif-11.gif",
-      "votes": 0
-  },
-  {
-      "id": 5,
-      "name": "Mme. Panda",
-      "image": "https://media.giphy.com/media/ALalVMOVR8Qw/giphy.gif",
-      "votes": 0
-  }
-];
+function fetchCharacters() {
+    fetch('http://localhost:3000/characters')
 
-// Function to load characters
-function loadCharacters() {
-  const characterBar = document.getElementById('character-bar');
-  const detailedInfoName = document.getElementById('detailed-name');
-  const detailedInfoImage = document.getElementById('image');
-  const detailedInfoVotes = document.getElementById('vote-count');
+   // Function to fetch and display characters
+      .then(response => response.json()) // Convert response to JSON format
+      .then(characters => {
+        const characterBar = document.getElementById('character-bar'); // Get the character bar div
 
-  data.forEach(character => {
-      const span = document.createElement('span');
-      span.textContent = character.name;
-      span.classList.add('character-name');
-      span.onclick = () => {
-          detailedInfoName.textContent = character.name;
-          detailedInfoImage.src = character.image;
-          detailedInfoVotes.textContent = `Votes: ${character.votes}`; // Add this line to show votes
-      };
-      characterBar.appendChild(span); // Append the span to characterBar
-  });
+        // Iterate over each character and create a span element
+        characters.forEach(character => {
+          const span = document.createElement('span'); // Create a span tag for each character
+          span.textContent = character.name;           // Set the character name as the text content
+          span.id = `spanks ${character.id}`           // Assign a unique ID to the span
+          characterBar.appendChild(span);              // Add the span to the character-bar div
+          
+          // Add functionality to update display when the character is clicked
+          rename(character);
+        });
+      })
+    //.catch(error => console.error('Error fetching characters:', error)); // Error handling
 }
 
-// Load characters when the page is loaded
-window.onload = loadCharacters;
+// Function to update the main display when a character is clicked
+function rename(character) {
+    const variab = document.getElementById(`spanks ${character.id}`); // Get the span element by ID
+    variab.addEventListener("click", (event) => {
+        const chan = document.getElementById('name');       // Get the name display element
+        chan.textContent = character.name;                  // Update the name
 
-// Handle adding a new character from the form
-const characterForm = document.getElementById('character-form');
+        const chang = document.getElementById('image');      // Get the image display element
+        chang.src = character.image;                        // Update the image source
+        chang.alt = character.name;                         // Set the alt text for the image
 
-characterForm.onsubmit = (event) => {
-  event.preventDefault(); // Prevent form submission
+        const chane = document.getElementById('vote-count'); // Get the vote count display element
+        chane.textContent = character.votes;                // Update the vote count
+    });
+}
 
-  const nameInput = document.getElementById('name').value;
-  const imageUrlInput = document.getElementById('image-url').value;
+// Function to handle vote adding
+function addstuff() {
+    const chee = document.getElementById('vote-count');  // Get vote count display
+    const chehe = document.getElementById('votes');      // Get input for additional votes
 
-  if (nameInput.trim() !== '' && imageUrlInput.trim() !== '') {
-      const newCharacter = {
-          id: data.length + 1,
-          name: nameInput,
-          image: imageUrlInput,
-          votes: 0
-      };
+    const addvotez = document.getElementById('votes-form'); // Get the form element for voting
+    addvotez.addEventListener("submit", (event) => {
+        const addition = Number(chee.textContent) + Number(chehe.value); // Add existing votes + new votes
+        chee.textContent = addition;                                     // Update vote count in DOM
+        event.preventDefault();                                          // Prevent form submission behavior
+    });
+}
 
-      data.push(newCharacter);
+// Function to reset vote count
+function resetBtn() {
+    const rest = document.getElementById('reset-btn');  // Get reset button
+    rest.addEventListener("click", (event) => {
+        const vot = document.getElementById("vote-count"); // Get vote count element
+        vot.textContent = 0;                              // Reset the vote count to 0
+    });
+}
 
-      const characterBar = document.getElementById('character-bar');
-      const span = document.createElement('span');
-      span.textContent = newCharacter.name;
-      span.classList.add('character-name');
-      span.onclick = () => {
-          document.getElementById('detailed-name').textContent = newCharacter.name;
-          document.getElementById('image').src = newCharacter.image;
-          document.getElementById('vote-count').textContent = `Votes: ${newCharacter.votes}`; // Add this line to show votes
-      };
+// Placeholder function for adding new characters (incomplete)
+function addCharacter() {
+    const addxters = getElementById("name2"); // This is incomplete and doesn't do anything yet
+}
 
-      characterBar.appendChild(span);
-      document.getElementById('name').value = '';
-      document.getElementById('image-url').value = '';
-  }
+// On window load, initialize the functions
+window.onload = () => {
+    fetchCharacters();  // Load characters and display them on the page
+    addstuff();         // Set up voting functionality
+    resetBtn();         // Set up the reset button functionality
+    // addCharacter();   // Add character functionality (currently not used)
 };
+
 
